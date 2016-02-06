@@ -1,5 +1,5 @@
 name: "Quentin Young"
 markdown: redcarpet
-highlighter: pygments
+highlighter: rouge
 permalink: :title
 exclude: [README.md, LICENSE, Makefile]
