@@ -1,18 +1,41 @@
 body {
-    padding: 0 .5em 0 .5em;
-    background-color: #6b8abb
+  font-family: sans-serif;
+  margin: 5ex 10ex;
 }
 
-pre {
-    font-family: Lucida Console,Lucida Sans Typewriter,monaco,Bitstream Vera Sans Mono,monospace;
-    font-size: 13px;
-    font-style: normal;
-    font-variant: normal;
-    font-weight: 400;
-    line-height: 18.5667px;
+tt, pre {
+  font-family: WebKitWorkaround, monospace;
+  font-family: Lucida Console,Lucida Sans Typewriter,monaco,Bitstream Vera Sans Mono,monospace;
+  font-size: 13px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  line-height: 18.5667px;
+}
+
+#content {
+  float: left;
+  max-width: 65ex;
+  margin-right: 5ex;
+}
+
+#sidebar {
+  float: left;
+  max-width: 20ex;
+}
+
+h1 {
+  font-weight: normal;
+  margin-bottom: 0;
+}
+
+h2 {
+  font-size: 100%;
+  margin-bottom: 0;
 }
 
 a {
     text-decoration: none;
     color: blue;
 }
+
