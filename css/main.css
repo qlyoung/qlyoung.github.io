@@ -1,6 +1,6 @@
 body {
   font-family: sans-serif;
-  margin: 5ex 10ex;
+  margin: 5ex 5ex;
 }
 
 tt, pre {
@@ -24,6 +24,17 @@ tt, pre {
   max-width: 20ex;
 }
 
+#accent {
+  float: left;
+  margin-top: -5ex;
+  margin-right: 5ex;
+  width: 1.3ex;
+}
+
+.accent-block {
+  height: 13rem;
+}
+
 h1 {
   font-weight: normal;
   margin-bottom: 0;
@@ -36,6 +47,5 @@ h2 {
 
 a {
     text-decoration: none;
-    color: blue;
+    color: #6977cf;
 }
-
