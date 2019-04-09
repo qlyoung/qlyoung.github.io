@@ -1,6 +1,6 @@
 body {
   font-family: sans-serif;
-  margin: 5ex 5ex;
+  margin: 5ex 10ex;
 }
 
 tt, pre {
@@ -25,7 +25,9 @@ tt, pre {
 }
 
 #accent {
-  float: left;
+  position: absolute;
+  left: 0;
+  margin-left: 5ex;
   margin-top: -5ex;
   margin-right: 5ex;
   width: 1.3ex;
