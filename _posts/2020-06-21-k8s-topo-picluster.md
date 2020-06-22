@@ -477,10 +477,7 @@ Copied here for posterity:
 
 Probably a good idea to reboot your master node here for good measure.
 
-And finally, we can deploy `k8s-topo`:
-- `kubectl create -f k8s-topo/manifest.yml`
-
-Voila.
+And finally, we can deploy `k8s-topo`.
 
 ### Step 3 - Install k8s-topo
 
@@ -509,6 +506,8 @@ Now you can deploy `k8s-topo` onto your cluster:
 cd k8s-topo
 kubectl apply -f manifest.yml
 ```
+
+Voila.
 
 Verify that the `k8s-topo` control pod and associated services have been created:
 
