@@ -4,7 +4,7 @@ title:  "Network simulations with k8s-topo on Pi 3B+ cluster"
 ---
 
 Network simulations on Raspberry Pi cluster
-==========================================
+===========================================
 
 This post covers how I set up [k8s-topo](https://github.com/networkop/k8s-topo)
 on a Raspberry Pi cluster to perform network simulations. `k8s-topo` is a sweet
@@ -12,6 +12,23 @@ project that lets you spin up arbitrary network topologies on Kubernetes
 clusters. The router nodes can be cEOS, Quagga, or (soon!) FRR. However, on
 ARM, the only supported router image is FRR since it's the only one that
 currently has ARM images available.
+
+Here's a picture of the cluster:
+![Raspberry Pi 3B+ cluster](/images/picluster.jpg)
+
+If you're curious, the backplane is a [Bitscope
+Blade](https://bitscope.com/product/blade/?p=about). I'd like to write another
+post on how to set up and provision such a cluster when I find the time.
+
+You can run some pretty big topologies even on such a small cluster, such as
+this 40-node random topology:
+
+![Undirected graph depicting example network topology](/images/randomtopo.png)
+
+Overall it's a capable, compact setup for experimenting with software routers.
+In my role as a maintainer for FRR it serves particularly well as a testbed for
+that project, especially for development related to our
+[Docker images](https://hub.docker.com/r/frrouting/frr).
 
 Fair warning: this involves a *lot* of source builds. The software industry -
 and this is especially true of the k8s / Docker communities - is largely an
@@ -87,11 +104,11 @@ predetermined location on the node - typically `/etc/cni/net.d/` - for a config
 file(s). This config file tells it which CNI plugins are available and which
 one to call. In particular, the config file specifies the path of the plugin
 binary, some general k8s-related options, and some binary-specific options to
-pass. K8s then calls this binary, passes it the requested state of the complete
-cluster network in environment variables (lol), and expects the binary to make
-it so. The binary itself typically interacts with the k8s API server to perform
-its actions, although it may do so indirectly by way of other tools, or even
-with other CNI plugins.
+pass. K8s then calls this binary, passes it the requested state of the cluster
+network in environment variables, and expects the binary to make it so. The
+binary itself typically interacts with the k8s API server to perform its
+actions, although it may do so indirectly by way of other tools, or even with
+other CNI plugins.
 
 The author of `k8s-topo`, [@networkop](https://github.com/networkop), has built
 a CNI plugin called [meshnet-cni](https://github.com/networkop/meshnet-cni).
@@ -168,12 +185,12 @@ ARM this won't work; it will just crash with `exec format error`. We need an
 ARM image. As it turns out, Helm doesn't actually build these, because real
 computers are all amd64, right?
 
-Fortunately, someone looking out for us aliens builds ARM images of `tiller`
-and publishes them on his personal DockerHub registry. I could write another
-post railing against binary-only dependencies downloaded from random people on
-the internet, maybe another time. Hopefully his registry is still available
-when you're reading this document. If not you'll have to find out how to build
-`tiller` for ARM yourself.
+Fortunately, [someone](https://hub.docker.com/u/jessestuart) looking out for us
+aliens builds ARM images of `tiller` and publishes them on his personal
+DockerHub registry. I could write another post railing against binary-only
+dependencies downloaded from random people on the internet, maybe another time.
+Hopefully his registry is still available when you're reading this document. If
+not you'll have to find out how to build `tiller` for ARM yourself.
 
 So, to initialize Helm with an appropriate backend image:
 
@@ -353,7 +370,9 @@ lower-level CNI referred to as the "delegate"; in this case Flannel. So if we
 disable Flannel and replace it wholesale with `meshnet-cni`, things will not
 work, but if we leave Flannel enabled, then `/etc/cni/net.d` is completely
 ignored. This is an unfortunate design choice by k3s that also precludes use of
-other CNIs that follow the "delegate" pattern, such as Multus. However, we can workaround this by simply installing our CNI to k3s's custom location, which is `/var/lib/rancher/k3s/agent/etc/cni/net.d`.
+other CNIs that follow the "delegate" pattern, such as Multus. However, we can
+workaround this by simply installing our CNI to k3s's custom location, which is
+`/var/lib/rancher/k3s/agent/etc/cni/net.d`.
 
 But it gets more complicated. That path is where the CNI configs go, but the
 CNI binaries go somewhere else, again not the default k8s location. And in the
@@ -456,8 +475,8 @@ Now that we have our overlay (`meshnet-cni`) deployed, we're ready to deploy `k8
 
 As with `meshnet-cni`, `k8s-topo` requires patches to work on ARM. These
 patches are much less extensive than the ones to `meshnet-cni` since nothing
-needs to be changed to accomodate k3s; the changes just point the images to the
-ARM-compatible ones I've built and published in my own DockerHub registry.
+needs to be changed to accommodate k3s; the changes just point the images to
+the ARM-compatible ones I've built and published in my own DockerHub registry.
 
 Pull my ARM-compatible fork of `k8s-topo`:
 
@@ -467,9 +486,9 @@ git clone --single-branch --branch k3s-arm https://github.com/qlyoung/k8s-topo.g
 
 One notable change is that I've also added support for
 [FRR](https://github.com/frrouting/frr), which is a significantly upgraded fork
-of Quagga (full disclaimer, at time of writing I am a maintainer for FRR). The
-rest of the images will still pull amd64 versions and so at this time the only
-image you can choose for your topology simulations is the FRR image.
+of Quagga. The rest of the images will still pull amd64 versions and so at this
+time the only image you can choose for your topology simulations is the FRR
+image.
 
 Now you can deploy `k8s-topo` onto your cluster:
 
