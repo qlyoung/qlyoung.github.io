@@ -128,7 +128,9 @@ someone reading this will tell me what I did wrong.
 
 `NetworkServiceMesh` does sort of the same thing as `meshnet-cni`, but in a
 different way. Since my end goal was really just to get my network sims going I
-didn't spend too much time researching what a "Service Mesh" is.
+didn't spend too much time researching what a "Service Mesh" is, but in NSM's
+case it seems to mean sidecar containers that deploy alongside your pods and
+provide network connectivity things.
 
 I've detailed my efforts towards setting up NetworkService mesh below, but it's
 collapsed to save a bit of space.
@@ -346,6 +348,14 @@ Now, at last, you can deploy NSM:
 ```
 SPIRE_ENABLED=false INSECURE=true FORWARDING_PLANE=kernel make helm-install-nsm
 ```
+
+At this point the containers deployed successfully, but the problem I ran into
+was some kind of communications between two of NSM's containers, similar to
+[this
+bug](https://github.com/networkservicemesh/networkservicemesh/issues/2160).
+
+By this time `meshnet-cni` was ready to try again so I went in that direction
+again.
 
 </details>
 
