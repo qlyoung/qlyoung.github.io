@@ -3,9 +3,6 @@ layout: post
 title:  "Network simulations with k8s-topo on Pi 3B+ cluster"
 ---
 
-Network simulations on Raspberry Pi cluster
-===========================================
-
 This post covers how I set up [k8s-topo](https://github.com/networkop/k8s-topo)
 on a Raspberry Pi cluster to perform network simulations. `k8s-topo` is a sweet
 project that lets you spin up arbitrary network topologies on Kubernetes
