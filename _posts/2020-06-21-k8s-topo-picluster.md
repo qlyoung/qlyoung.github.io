@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Network simulations with k8s-topo on Raspberry Pi"
+title:  "Network simulations with k8s-topo on Pi 3B+ cluster"
 ---
 
 Network simulations on Raspberry Pi cluster
@@ -230,7 +230,9 @@ turn the forwarder itself off.
 
 `cd` into your NSM clone and apply the following patches:
 
-```
+Patch 1:
+
+```diff
 diff --git a/forwarder/build.mk b/forwarder/build.mk
 index 0d24b89f..23c1cac4 100644
 --- a/forwarder/build.mk
@@ -242,6 +244,8 @@ index 0d24b89f..23c1cac4 100644
 -forwarder_images = vppagent-forwarder kernel-forwarder
 +forwarder_images = kernel-forwarder
 ```
+
+Patch 2:
 
 ```diff
 diff --git a/test/build.mk b/test/build.mk
@@ -324,13 +328,88 @@ SPIRE_ENABLED=false INSECURE=true FORWARDING_PLANE=kernel make helm-install-nsm
 #### Setting up meshnet-cni
 
 Just like with NetworkServiceMesh, we have to make a lot of adjustments, build
-custom images, etc.
+custom images, etc. I've already done these and put them in a fork of
+`meshnet-cni`, so rather than walk through the necessary changes you can just
+clone my branch:
 
-Off the bat there's a few places where amd64 binaries are downloaded, so we
-need to patch those out.
-<finish this bit>
+```
+git clone --single-branch --branch k3s-arm https://github.com/qlyoung/meshnet-cni.git
+```
+
+Brief summary of changes made:
+- Change all binary downloads to fetch ARM versions
+- Modify CNI config files for k3s Flannel
+- Remove node selectors that restrict to amd64 nodes
+- Change docker images to point at ARM-compatible builds with above changes
+- Modify CNI config paths to place them in the custom k3s locations
+
+The last one does require some manual patching. k3s does not use the standard
+`/etc/cni/net.d` location for CNI configs. It will only look at that directory
+if you disable the built-in CNI, Flannel. However, `meshnet-cni` works by
+layering additional network resources *on top* of resources created by a
+lower-level CNI referred to as the "delegate"; in this case Flannel. So if we
+disable Flannel and replace it wholesale with `meshnet-cni`, things will not
+work, but if we leave Flannel enabled, then `/etc/cni/net.d` is completely
+ignored. This is an unfortunate design choice by k3s that also precludes use of
+other CNIs that follow the "delegate" pattern, such as Multus. However, we can workaround this by simply installing our CNI to k3s's custom location, which is `/var/lib/rancher/k3s/agent/etc/cni/net.d`.
+
+But it gets more complicated. That path is where the CNI configs go, but the
+CNI binaries go somewhere else, again not the default k8s location. And in the
+case of the binaries, the k3s equivalent path includes a cluster-specific GUID
+:-). So we need to find this GUID and tweak `meshnet-cni` before installing to
+know it. Fortunately this customization is only relevant for the k8s manifests
+and doesn't need to be hardcoded in the Docker images, so you can use the k3s +
+ARM images I've already built instead of having to build your own.
+
+To find the GUID:
+
+```
+ls /var/lib/rancher/k3s/data
+```
+
+There should be a single directory there whose name is a long hash-looking string, in my case:
+
+```
+#  ls /var/lib/rancher/k3s/data
+ec54df8c1938fe49660230d16334b4c7e83888a93e6f037fd8552893e2f67383/
+```
+
+So to make sure `meshnet-cni` binaries make it into this location, `cd` into
+your `meshnet-cni` repo and run this, replacing `YOUR_GUID` with the GUID you
+just found:
+
+```
+export K3S_CNI_GUID=<YOUR_GUID>
+sed -i -e "s/YOUR_K3S_GUID/$K3S_CNI_GUID/g" manifests/base/meshnet.yml
+```
+
+Now you should be ready to deploy `meshnet-cni`. To do this:
+
+```
+apt install -yqq build-essential
+make install
+```
+
+If the installation was successful you should now have a `meshnet-cni` agent
+pod running on each node. Verify this:
+
+```
+# kubectl -n meshnet get all
+NAME                READY   STATUS    RESTARTS   AGE
+pod/meshnet-p7mmq   1/1     Running   2          15d
+pod/meshnet-b66vp   1/1     Running   2          15d
+pod/meshnet-wqlvz   1/1     Running   0          43s
+pod/meshnet-6jk7g   1/1     Running   0          43s
+
+NAME                     DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+daemonset.apps/meshnet   4         4         4       4            4           <none>          15d
+```
+
+With luck you should be good to go, and `meshnet-cni` is now ready to create
+the necessary VXLAN devices as directed by `k8s-topo`.
 
 ### Step 2 - Disable load balancer
+
 
 Now that we have our underlay deployed and have manually inserted our
 `k8s-topo` images into the node image caches, we're finally ready to deploy
