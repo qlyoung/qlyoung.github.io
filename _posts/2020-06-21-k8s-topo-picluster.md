@@ -9,7 +9,9 @@ Network simulations on Raspberry Pi cluster
 This post covers how I set up [k8s-topo](https://github.com/networkop/k8s-topo)
 on a Raspberry Pi cluster to perform network simulations. `k8s-topo` is a sweet
 project that lets you spin up arbitrary network topologies on Kubernetes
-clusters. The router nodes can be cEOS, Quagga, or (soon!) FRR.
+clusters. The router nodes can be cEOS, Quagga, or (soon!) FRR. However, on
+ARM, the only supported router image is FRR since it's the only one that
+currently has ARM images available.
 
 Fair warning: this involves a *lot* of source builds. The software industry -
 and this is especially true of the k8s / Docker communities - is largely an
@@ -174,7 +176,7 @@ when you're reading this document. If not you'll have to find out how to build
 `tiller` for ARM yourself.
 
 So, to initialize Helm with an appropriate backend image:
-  
+
 ```
 helm init --service-account tiller --tiller-image=jessestuart/tiller:v2.16.7
 ```
@@ -206,7 +208,7 @@ Clone the NSM repo:
 ```
 git clone https://github.com/networkservicemesh/networkservicemesh.git
 cd networkservicemesh
-``` 
+```
 
 NSM has two forwarding plane implementations available. One is based on VPP
 (the default), the other uses the kernel. The VPP image, naturally, doesn't
@@ -240,7 +242,7 @@ index 0d24b89f..23c1cac4 100644
 @@ -12,7 +12,7 @@
  # See the License for the specific language governing permissions and
  # limitations under the License.
- 
+
 -forwarder_images = vppagent-forwarder kernel-forwarder
 +forwarder_images = kernel-forwarder
 ```
@@ -253,7 +255,7 @@ index 97354fbf..d1aff0d3 100644
 --- a/test/build.mk
 +++ b/test/build.mk
 @@ -14,7 +14,7 @@
- 
+
  test_apps = $(shell ls ./test/applications/cmd/)
  test_targets = $(addsuffix -build, $(addprefix go-, $(test_apps)))
 -test_images = test-common vpp-test-common
@@ -411,9 +413,9 @@ the necessary VXLAN devices as directed by `k8s-topo`.
 ### Step 2 - Disable load balancer
 
 
-Now that we have our underlay deployed and have manually inserted our
-`k8s-topo` images into the node image caches, we're finally ready to deploy
-`k8s-topo`. Not!
+Now that we have our overlay (`meshnet-cni`) deployed, we're ready to deploy `k8s-topo`.
+
+Not!
 
 By default k3s runs a load balancer, which binds ports 80 and 443 on every
 node. `k8s-topo` wants those, so if you try to deploy `k8s-topo` now, your pods
@@ -433,9 +435,9 @@ Copied here for posterity:
 > 2. Stop the k3s service: `sudo service k3s stop`
 > 3. Edit service file sudo nano `/etc/systemd/system/k3s.service` and add this
 >    line to `ExecStart`:
-> 
+>
 >    `--no-deploy traefik \`
-> 
+>
 > 4. Reload the service file: `sudo systemctl daemon-reload`
 > 5. Remove the manifest file from auto-deploy folder: `sudo rm
 >    /var/lib/rancher/k3s/server/manifests/traefik.yaml`
@@ -450,8 +452,237 @@ Voila.
 
 ### Step 3 - Install k8s-topo
 
-<finish this bit>
+Now that we have our overlay (`meshnet-cni`) deployed, we're ready to deploy `k8s-topo`.
+
+As with `meshnet-cni`, `k8s-topo` requires patches to work on ARM. These
+patches are much less extensive than the ones to `meshnet-cni` since nothing
+needs to be changed to accomodate k3s; the changes just point the images to the
+ARM-compatible ones I've built and published in my own DockerHub registry.
+
+Pull my ARM-compatible fork of `k8s-topo`:
+
+```
+git clone --single-branch --branch k3s-arm https://github.com/qlyoung/k8s-topo.git
+```
+
+One notable change is that I've also added support for
+[FRR](https://github.com/frrouting/frr), which is a significantly upgraded fork
+of Quagga (full disclaimer, at time of writing I am a maintainer for FRR). The
+rest of the images will still pull amd64 versions and so at this time the only
+image you can choose for your topology simulations is the FRR image.
+
+Now you can deploy `k8s-topo` onto your cluster:
+
+```
+cd k8s-topo
+kubectl apply -f manifest.yml
+```
+
+Verify that the `k8s-topo` control pod and associated services have been created:
+
+```
+root@clusterpi-69 # kubectl get all
+NAME                            READY   STATUS        RESTARTS   AGE
+pod/k8s-topo-86cbbdbddb-xrwlm   1/1     Running       0          55s
+
+NAME                       TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+service/kubernetes         ClusterIP   10.43.0.1       <none>        443/TCP        22d
+service/k8s-topo-service   NodePort    10.43.111.199   <none>        80:30000/TCP   56s
+
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/k8s-topo   1/1     1            1           56s
+
+NAME                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/k8s-topo-86cbbdbddb   1         1         1       55s
+```
+
+That's it, we're done!
 
 ### Step 4 - profit
 
+Now you can log into the `k8s-topo` control pod and use the CLI tools there.
+
+```
+root@clusterpi-69 # kubectl exec -it deployment/k8s-topo -- sh
+
+/k8s-topo #
+/k8s-topo # k8s-topo -h
+usage: k8s-topo [-h] [-d] [--create | --destroy | --show | --eif | --lldp | --graph] topology
+
+Tool to create network topologies inside k8s
+
+positional arguments:
+  topology     Topology file
+
+optional arguments:
+  -h, --help   show this help message and exit
+  -d, --debug  Enable Debug
+
+Actions:
+  Create or destroy topology
+
+  --create     Create topology
+  --destroy    Destroy topology
+  --show       Show running topology
+  --eif        Enable ip forwarding for cEOS devices
+  --lldp       Enable LLDP forwarding for vrnetlab devices
+  --graph      Generate a D3 graph
+/k8s-topo #
+```
+
 ### Usage Examples
+
+Create a random FRR topology:
+
+```
+/k8s-topo # cd examples/builder/
+/k8s-topo/examples/builder # ./builder 10 3
+Total number of links generated: 12
+/k8s-topo/examples/builder # sed -i -e 's/qrtr/frr/g' ./random.yml
+/k8s-topo/examples/builder # cat random.yml
+conf_dir: /k8s-topo/examples/builder/config-random
+etcd_port: 32379
+links:
+- endpoints:
+  - frr-192-0-2-2:eth1:10.0.0.2/30
+  - frr-192-0-2-5:eth1:10.0.0.1/30
+- endpoints:
+  - frr-192-0-2-2:eth2:10.0.0.5/30
+  - frr-192-0-2-4:eth1:10.0.0.6/30
+- endpoints:
+  - frr-192-0-2-0:eth1:10.0.0.10/30
+  - frr-192-0-2-4:eth2:10.0.0.9/30
+- endpoints:
+  - frr-192-0-2-0:eth2:10.0.0.13/30
+  - frr-192-0-2-9:eth1:10.0.0.14/30
+- endpoints:
+  - frr-192-0-2-3:eth1:10.0.0.18/30
+  - frr-192-0-2-9:eth2:10.0.0.17/30
+- endpoints:
+  - frr-192-0-2-3:eth2:10.0.0.21/30
+  - frr-192-0-2-7:eth1:10.0.0.22/30
+- endpoints:
+  - frr-192-0-2-0:eth3:10.0.0.25/30
+  - frr-192-0-2-6:eth1:10.0.0.26/30
+- endpoints:
+  - frr-192-0-2-4:eth3:10.0.0.29/30
+  - frr-192-0-2-8:eth1:10.0.0.30/30
+- endpoints:
+  - frr-192-0-2-1:eth1:10.0.0.34/30
+  - frr-192-0-2-4:eth4:10.0.0.33/30
+- endpoints:
+  - frr-192-0-2-1:eth2:10.0.0.37/30
+  - frr-192-0-2-8:eth2:10.0.0.38/30
+- endpoints:
+  - frr-192-0-2-6:eth2:10.0.0.42/30
+  - frr-192-0-2-8:eth3:10.0.0.41/30
+- endpoints:
+  - frr-192-0-2-0:eth4:10.0.0.45/30
+  - frr-192-0-2-5:eth2:10.0.0.46/30
+publish_base:
+  22: 30001
+```
+
+Apply the topology:
+
+```
+/k8s-topo/examples/builder # cd /k8s-topo/
+/k8s-topo # k8s-topo --create examples/builder/random.yml
+INFO:__main__:All topology data has been uploaded
+INFO:__main__:All pods have been created successfully
+INFO:__main__:
+ alias frr-192-0-2-2='kubectl exec -it frr-192-0-2-2 sh'
+ alias frr-192-0-2-5='kubectl exec -it frr-192-0-2-5 sh'
+ alias frr-192-0-2-4='kubectl exec -it frr-192-0-2-4 sh'
+ alias frr-192-0-2-0='kubectl exec -it frr-192-0-2-0 sh'
+ alias frr-192-0-2-9='kubectl exec -it frr-192-0-2-9 sh'
+ alias frr-192-0-2-3='kubectl exec -it frr-192-0-2-3 sh'
+ alias frr-192-0-2-7='kubectl exec -it frr-192-0-2-7 sh'
+ alias frr-192-0-2-6='kubectl exec -it frr-192-0-2-6 sh'
+ alias frr-192-0-2-8='kubectl exec -it frr-192-0-2-8 sh'
+ alias frr-192-0-2-1='kubectl exec -it frr-192-0-2-1 sh'
+```
+
+Log out of the container and verify that the pods have been created:
+
+```
+root@clusterpi-69 # kubectl get all
+NAME                            READY   STATUS        RESTARTS   AGE
+pod/k8s-topo-86cbbdbddb-xrwlm   1/1     Running       0          6m18s
+pod/frr-192-0-2-2               1/1     Running       0          35s
+pod/frr-192-0-2-5               1/1     Running       0          35s
+pod/frr-192-0-2-7               1/1     Running       0          34s
+pod/frr-192-0-2-9               1/1     Running       0          35s
+pod/frr-192-0-2-4               1/1     Running       0          35s
+pod/frr-192-0-2-3               1/1     Running       0          34s
+pod/frr-192-0-2-1               1/1     Running       0          33s
+pod/frr-192-0-2-0               1/1     Running       0          35s
+pod/frr-192-0-2-6               1/1     Running       0          34s
+pod/frr-192-0-2-8               1/1     Running       0          34s
+```
+
+Log into one of the pods and have a look around:
+```
+root@clusterpi-69 # kubectl exec -it pod/frr-192-0-2-2 -- sh
+/ # ip addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+3: eth0@if31: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
+    link/ether ca:c9:8b:1f:d6:69 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 10.42.2.116/24 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::c8c9:8bff:fe1f:d669/64 scope link
+       valid_lft forever preferred_lft forever
+40: eth2@if41: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
+    link/ether e2:72:df:0f:93:55 brd ff:ff:ff:ff:ff:ff link-netnsid 1
+    inet 10.0.0.5/30 brd 10.0.0.7 scope global eth2
+       valid_lft forever preferred_lft forever
+    inet6 fe80::e072:dfff:fe0f:9355/64 scope link
+       valid_lft forever preferred_lft forever
+42: eth1@if43: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
+    link/ether 2e:af:91:d4:c1:b0 brd ff:ff:ff:ff:ff:ff link-netnsid 2
+    inet 10.0.0.2/30 brd 10.0.0.3 scope global eth1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::2caf:91ff:fed4:c1b0/64 scope link
+       valid_lft forever preferred_lft forever
+/ # vtysh
+% Can't open configuration file /etc/frr/vtysh.conf due to 'No such file or directory'.
+
+Hello, this is FRRouting (version 7.5-dev_git587162029617).
+Copyright 1996-2005 Kunihiro Ishiguro, et al.
+
+frr-192-0-2-2#
+frr-192-0-2-2# sh run
+Building configuration...
+
+Current configuration:
+!
+frr version 7.5-dev_git587162029617
+frr defaults traditional
+hostname frr-192-0-2-2
+no ipv6 forwarding
+!
+line vty
+!
+end
+frr-192-0-2-2#
+```
+
+Welcome to your simulation.
+
+### Notes
+
+I've extensively replaced various components of this setup with my own forks to
+which I've added ARM support. I plan to merge the ARM changes back into their
+respective upstream repos, but this is going to take some time, as the changes
+I've done currently are very quick-and-dirty. They need to be rewritten not
+just to work on ARM, but to generalize amd64-specific build options to work on
+any target architecture.
+
+I very much dislike making this setup depending on my personal GitHub forks and
+DockerHub registry, but doing so was the only way I could finish this project
+in a reasonable time frame.
