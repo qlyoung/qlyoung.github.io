@@ -116,7 +116,7 @@ There is a nice (but slightly outdated) writeup on it
 [here](https://networkop.co.uk/post/2018-11-k8s-topo-p1/). Tl;dr it creates
 `veth`'s for connectivity between pods on the same node and runs a daemon on
 all the nodes to coordinate creation of VXLAN p2p links for cross-node pod
-connectivity  When I started on this project, it didn't have support for k8s
+connectivity. When I started on this project, it didn't have support for k8s
 1.18, which is what I was using. After opening a GitHub issue asking dumb
 questions in which I mentioned this fact, he updated it to support 1.18 (thank
 you!). By that time I had already attempted to use the other supported method,
