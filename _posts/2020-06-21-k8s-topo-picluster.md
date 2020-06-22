@@ -73,7 +73,8 @@ Note that while my target device, Pi 3B+, is a 64-bit platform, I have tried to
 avoid taking the easy way out and downloading prebuilt arm64 binaries. That is
 what got us into this monoculture mess to begin with. I do liberally download
 32 bit armv5 binaries though, because some of the tools used can take days to
-build on a Raspberry Pi (looking at you protobuf).
+build on a Raspberry Pi (looking at you protobuf). These should be largely
+compatible across most ARM devices.
 
 Also, before we go any further, add this line to the end of your `.bashrc`:
 
