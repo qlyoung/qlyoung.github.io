@@ -14,11 +14,13 @@ ARM, the only supported router image is FRR since it's the only one that
 currently has ARM images available.
 
 Here's a picture of the cluster:
+
 ![Raspberry Pi 3B+ cluster](/images/picluster.jpg)
 
 If you're curious, the backplane is a [Bitscope
-Blade](https://bitscope.com/product/blade/?p=about). I'd like to write another
-post on how to set up and provision such a cluster when I find the time.
+Blade](https://bitscope.com/product/blade/?p=about). I'd like to
+write another post on how to set up and provision such a cluster when I find
+the time.
 
 You can run some pretty big topologies even on such a small cluster, such as
 this 40-node random topology:
