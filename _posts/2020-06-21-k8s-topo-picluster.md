@@ -132,13 +132,16 @@ someone reading this will tell me what I did wrong.
 different way. Since my end goal was really just to get my network sims going I
 didn't spend too much time researching what a "Service Mesh" is.
 
-#### Setting Up NetworkServiceMesh
+I've detailed my efforts towards setting up NetworkService mesh below, but it's
+collapsed to save a bit of space.
 
-Warning:
+<details>
 
-> I was not able to get this working. I feel like I got pretty close, so if
-> you're adventurous perhaps you can figure out the last piece of the puzzle,
-> I would love to know about it.
+<summary><b>Setting Up NetworkServiceMesh</b></summary>
+
+*I was not able to get this working. I feel like I got pretty close, so if
+you're adventurous perhaps you can figure out the last piece of the puzzle, I
+would love to know about it.*
 
 NSM is deployed with Helm, so we have to set up Helm first. Helm is like a
 package manager for k8s.
@@ -345,6 +348,13 @@ Now, at last, you can deploy NSM:
 ```
 SPIRE_ENABLED=false INSECURE=true FORWARDING_PLANE=kernel make helm-install-nsm
 ```
+
+</details>
+
+Instead of NSM I ended up going with `meshnet-cni`, and I recommend you go this
+route as well; it's lighter, simpler and created by the author of `k8s-topo`
+specifically for use with that project. Consequently, changes to one are less
+likely to break the other :)
 
 #### Setting up meshnet-cni
 
