@@ -95,7 +95,7 @@ End goal: Get `k8s-topo` running.
 
 ### Step 1: Install Dependencies
 
-So, the main thing `k8s-topo` needs is a way to configure appropriate network
+The main thing `k8s-topo` needs is a way to configure appropriate network
 devices in a Kubernetes-sanctioned way; something to sit on top of the "native"
 Kubernetes networking sludge and provide a playground to allow us to create
 interfaces accessible to our containers and wire them up. `k8s-topo` supports
@@ -198,7 +198,7 @@ dependencies downloaded from random people on the internet, maybe another time.
 Hopefully his registry is still available when you're reading this document. If
 not you'll have to find out how to build `tiller` for ARM yourself.
 
-So, to initialize Helm with an appropriate backend image:
+To initialize Helm with an appropriate backend image:
 
 ```
 helm init --service-account tiller --tiller-image=jessestuart/tiller:v2.16.7
@@ -379,7 +379,7 @@ The last one does require some manual patching. k3s does not use the standard
 `/etc/cni/net.d` location for CNI configs. It will only look at that directory
 if you disable the built-in CNI, Flannel. However, `meshnet-cni` works by
 layering additional network resources *on top* of resources created by a
-lower-level CNI referred to as the "delegate"; in this case Flannel. So if we
+lower-level CNI referred to as the "delegate"; in this case Flannel. If we
 disable Flannel and replace it wholesale with `meshnet-cni`, things will not
 work, but if we leave Flannel enabled, then `/etc/cni/net.d` is completely
 ignored. This is an unfortunate design choice by k3s that also precludes use of
@@ -390,7 +390,7 @@ workaround this by simply installing our CNI to k3s's custom location, which is
 But it gets more complicated. That path is where the CNI configs go, but the
 CNI binaries go somewhere else, again not the default k8s location. And in the
 case of the binaries, the k3s equivalent path includes a cluster-specific GUID
-:-). So we need to find this GUID and tweak `meshnet-cni` before installing to
+:-). We need to find this GUID and tweak `meshnet-cni` before installing to
 know it. Fortunately this customization is only relevant for the k8s manifests
 and doesn't need to be hardcoded in the Docker images, so you can use the k3s +
 ARM images I've already built instead of having to build your own.
@@ -408,9 +408,9 @@ There should be a single directory there whose name is a long hash-looking strin
 ec54df8c1938fe49660230d16334b4c7e83888a93e6f037fd8552893e2f67383/
 ```
 
-So to make sure `meshnet-cni` binaries make it into this location, `cd` into
-your `meshnet-cni` repo and run this, replacing `YOUR_GUID` with the GUID you
-just found:
+To make sure `meshnet-cni` binaries make it into this location, `cd` into your
+`meshnet-cni` repo and run this, replacing `YOUR_GUID` with the GUID you just
+found:
 
 ```
 export K3S_CNI_GUID=<YOUR_GUID>
