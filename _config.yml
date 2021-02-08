@@ -1,5 +1,9 @@
 name: "Quentin Young"
-markdown: GFM
-highlighter: rouge
+markdown: kramdown
+kramdown:
+    input: GFM
+    syntax_highlighter: rouge
+    syntax_highlighter_opts:
+        css_class: 'highlight'
 permalink: :title
 exclude: [README.md, LICENSE, Makefile]
