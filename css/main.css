@@ -13,6 +13,10 @@ tt, pre {
   line-height: 18.5667px;
 }
 
+pre {
+  overflow: auto;
+}
+
 #content {
   float: left;
   max-width: 65ex;
