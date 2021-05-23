@@ -17,28 +17,34 @@ pre {
   overflow: auto;
 }
 
-#content {
-  float: left;
-  max-width: 65ex;
-  margin-right: 5ex;
-}
-
-#sidebar {
-  float: left;
-  max-width: 20ex;
-}
-
 #accent {
-  position: absolute;
+  position: fixed;
   left: 0;
-  margin-left: 5ex;
   margin-top: -5ex;
-  margin-right: 5ex;
-  width: 1.3ex;
+  width: 3ex;
+  height: 100vh;
+  background: linear-gradient(27deg, #1c3a50 25%, #375a6a 25% 50%, #56628b 50% 75%, #649ba9 75%);
 }
 
 .accent-block {
   height: 13rem;
+}
+
+#maingrid {
+  display: grid;
+  grid-template-columns: fit-content(65ex) auto;
+  grid-template-rows: auto auto;
+}
+
+#sidebar {
+  max-width: 20ex;
+  justify-self: start;
+  grid-column: 2;
+  grid-row: 1;
+}
+
+#bloglist {
+  margin-left: -4ex;
 }
 
 h1 {

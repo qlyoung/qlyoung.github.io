@@ -3,13 +3,12 @@ layout: default
 title: Quentin Young
 ---
 <div id="accent">
-<div class="accent-block" style="background-color:#56628b"></div>
-<div class="accent-block" style="background-color:#1c3a50"></div>
-<div class="accent-block" style="background-color:#375a6a"></div>
-<div class="accent-block" style="background-color:#649ba9"></div>
 </div>
 
 <h1>Quentin Young</h1>
+
+<div id="maingrid">
+
 <div id=content>
 <p><a href="https://www.nvidia.com/en-us/data-center/">Datacenter networking</a> @ <a href="https://nvidia.com">Nvidia</a></p>
 <p>Previously <a href="https://github.com/frrouting/frr.git">Routing protocols</a> @ <a href="https://cumulusnetworks.com">Cumulus Networks</a></p>
@@ -60,24 +59,25 @@ title: Quentin Young
 </pre>
 </div>
 
-<div id="bloglist">
-  <h2>Blog</h2>
-  
-  <ul>
-    {% for post in site.posts %}
-      <li>
-        <a href="{{ post.url }}">{{ post.title }}</a>
-      </li>
-    {% endfor %}
-  </ul>
+<div id="sidebar">
+  <div id="bloggo">
+    <h2>Blog</h2>
+    <ul id="bloglist">
+      {% for post in site.posts %}
+        <li>
+          <a href="{{ post.url }}">{{ post.title }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div id="resources">
+    <h2>Resources</h2>
+    <p><a href='https://github.com/qlyoung'>GitHub</a></p>
+    <p><a href='https://pgp.mit.edu/pks/lookup?op=get&search=0xCF7003570C801DE9'>PGP</a></p>
+  </div>
 </div>
 
-
-<div id="sidebar">
-  <h2>Resources</h2>
-
-  <p><a href='https://github.com/qlyoung'>GitHub</a></p>
-  <p><a href='https://pgp.mit.edu/pks/lookup?op=get&search=0xCF7003570C801DE9'>PGP</a></p>
 </div>
 
 <br clear=all>
