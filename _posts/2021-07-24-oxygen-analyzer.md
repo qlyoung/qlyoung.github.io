@@ -91,18 +91,18 @@ correct wiring here in hopes someone else might find them useful.
 
 Here's the complete wiring diagram from the instructions:
 
-![Full wiring diagram for El Cheapo II oxygen analyzer](/images/ec2-wiring-diagram.png)
+![Full wiring diagram for El Cheapo II oxygen analyzer](/images/ec2-wiring-diagram.png){:height="800px"}
 
 (See what I mean by charming? :-)
 
 Jack wiring from the instructions:
 
-![TRS jack wiring diagram](/images/ec2-jack-wiring-diagram.png)
+![TRS jack wiring diagram](/images/ec2-jack-wiring-diagram.png){:height="200px"}
 
 Correct jack wiring (note wire colors):
 
-![Correct TRS jack to voltmeter wiring](/images/jack-correct-wiring-1.jpg)
-![Correct TRS jack to voltmeter wiring](/images/jack-correct-wiring-2.jpg)
+![Correct TRS jack to voltmeter wiring](/images/jack-correct-wiring-1.jpg){:height="800px"}
+![Correct TRS jack to voltmeter wiring](/images/jack-correct-wiring-2.jpg){:height="800px"}
 
 I also opted to use the upgraded 10 turn potentiometer, available from OxyCheq,
 rather than the standard one that comes with the kit. The difference is that
@@ -114,12 +114,12 @@ appropriate wiring.
 
 Pot wiring from the instructions:
 
-![TRS jack wiring diagram](/images/ec2-pot-wiring-diagram.png)
+![TRS jack wiring diagram](/images/ec2-pot-wiring-diagram.png){:height="200px"}
 
 The correct pot wiring for the 10 turn pot is visible in this overall shot of
 the completed circuit.
 
-![Side view of completed analyzer internals](/images/o2-analyzer-finished-shot.jpg)
+![Side view of completed analyzer internals](/images/o2-analyzer-finished-shot.jpg){:height="800px" }
 
 I know the joint on the lower leg of the pot looks horrible, I fixed it after
 that photo.
