@@ -13,6 +13,26 @@ pre {
   overflow: auto;
 }
 
+h1 {
+  font-weight: normal;
+  margin-bottom: 0;
+}
+
+h2 {
+  font-size: 100%;
+  margin-bottom: 0;
+}
+
+a {
+    text-decoration: none;
+    color: #6977cf;
+}
+
+img {
+    max-width: 100%;
+    max-height: 50vh;
+}
+
 #accent {
   position: fixed;
   left: 0;
@@ -20,10 +40,6 @@ pre {
   width: 3ex;
   height: 100vh;
   background: linear-gradient(27deg, #1c3a50 25%, #375a6a 25% 50%, #56628b 50% 75%, #649ba9 75%);
-}
-
-.accent-block {
-  height: 13rem;
 }
 
 #maingrid {
@@ -46,22 +62,7 @@ pre {
   margin-left: 2vw;
 }
 
-h1 {
-  font-weight: normal;
-  margin-bottom: 0;
+.accent-block {
+  height: 13rem;
 }
 
-h2 {
-  font-size: 100%;
-  margin-bottom: 0;
-}
-
-a {
-    text-decoration: none;
-    color: #6977cf;
-}
-
-img {
-    max-width: 100%;
-    max-height: 50vh;
-}
