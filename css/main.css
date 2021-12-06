@@ -33,6 +33,10 @@ img {
     max-height: 50vh;
 }
 
+td {
+    vertical-align: top;
+}
+
 #accent {
   position: fixed;
   left: 0;
