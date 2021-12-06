@@ -137,7 +137,9 @@ collapsed to save a bit of space.
 
 <details>
 
-<summary><b>Setting Up NetworkServiceMesh</b></summary>
+<summary markdown="span">
+<b>Setting Up NetworkServiceMesh</b>
+</summary>
 
 *I was not able to get this working. I feel like I got pretty close, so if
 you're adventurous perhaps you can figure out the last piece of the puzzle, I
@@ -178,8 +180,8 @@ kubectl create clusterrolebinding tiller \
 ```
 
 References:
-https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
-https://rancher.com/docs/rancher/v2.x/en/installation/options/helm2/helm-init/
+* <https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/>
+* <https://rancher.com/docs/rancher/v2.x/en/installation/options/helm2/helm-init/>
 
 Now we start getting to the x86 monoculture stuff.
 
@@ -203,11 +205,9 @@ To initialize Helm with an appropriate backend image:
 helm init --service-account tiller --tiller-image=jessestuart/tiller:v2.16.7
 ```
 
-*Note the tag*. If you downloaded a later version of Helm 2 earlier, you'll
+*Note the tag. If you downloaded a later version of Helm 2 earlier, you'll
 need to change the tag version to match. The backend version must match the
-client version (you can see what you installed with `helm version`).
-
-<hr>
+client version (you can see what you installed with `helm version`).*
 
 Next we'll have to build NSM ourselves, because they don't provide images for
 anything except amd64.
@@ -356,6 +356,8 @@ bug](https://github.com/networkservicemesh/networkservicemesh/issues/2160).
 
 By this time `meshnet-cni` was ready to try again so I went in that direction
 again.
+
+---
 
 </details>
 
