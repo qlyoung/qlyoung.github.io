@@ -56,9 +56,9 @@ title:  "music management"
             phone  laptop  idk
 ```
 
-[0] https://beets.io/
+[0] <https://beets.io/>
 
-[2] https://syncthing.net/
+[2] <https://syncthing.net/>
 
 [1]
 

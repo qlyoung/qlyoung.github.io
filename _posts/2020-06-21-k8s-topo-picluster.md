@@ -464,8 +464,9 @@ logic.
 
 Anyway, we need to turn that shit off:
 
-https://rancher.com/docs/k3s/latest/en/networking/#traefik-ingress-controller
-https://github.com/rancher/k3s/issues/1160#issuecomment-561572618
+<https://rancher.com/docs/k3s/latest/en/networking/#traefik-ingress-controller>
+
+<https://github.com/rancher/k3s/issues/1160#issuecomment-561572618>
 
 Copied here for posterity:
 
