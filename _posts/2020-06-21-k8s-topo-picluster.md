@@ -469,18 +469,31 @@ Anyway, we need to turn that off:
 
 Copied here for posterity:
 
-> 1. Remove traefik helm chart resource: `kubectl -n kube-system delete
->    helmcharts.helm.cattle.io traefik`
-> 2. Stop the k3s service: `sudo service k3s stop`
-> 3. Edit service file sudo nano `/etc/systemd/system/k3s.service` and add this
->    line to `ExecStart`:
->
->    `--no-deploy traefik \`
->
-> 4. Reload the service file: `sudo systemctl daemon-reload`
-> 5. Remove the manifest file from auto-deploy folder: `sudo rm
->    /var/lib/rancher/k3s/server/manifests/traefik.yaml`
-> 6. Start the k3s service: `sudo service k3s start`
+> 1. Remove traefik helm chart resource:
+>    ```
+>    kubectl -n kube-system delete helmcharts.helm.cattle.io traefik
+>    ```
+> 2. Stop the k3s service:
+>    ```
+>    sudo service k3s stop
+>    ```
+> 3. Edit service file `/etc/systemd/system/k3s.service` and add this line to
+>    `ExecStart`:
+>    ```
+>    --no-deploy traefik \
+>    ```
+> 4. Reload the service file:
+>    ```
+>    sudo systemctl daemon-reload
+>    ```
+> 5. Remove the manifest file from auto-deploy folder:
+>    ```
+>    sudo rm /var/lib/rancher/k3s/server/manifests/traefik.yaml
+>    ```
+> 6. Start the k3s service:
+>    ```
+>    sudo service k3s start
+>    ```
 
 Probably a good idea to reboot your master node here for good measure.
 
