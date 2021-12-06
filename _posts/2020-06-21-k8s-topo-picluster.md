@@ -459,10 +459,9 @@ Not!
 By default k3s runs a load balancer, which binds ports 80 and 443 on every
 node. `k8s-topo` wants those, so if you try to deploy `k8s-topo` now, your pods
 will remain in `Pending` because port `80` is in use. Don't bother trying to
-`netstat -tln`, port 80 won't show up. But it's still in use.  Kubernetes
-logic.
+`netstat -tln`, port 80 won't show up. But it's still in use. Kubernetes logic.
 
-Anyway, we need to turn that shit off:
+Anyway, we need to turn that off:
 
 <https://rancher.com/docs/k3s/latest/en/networking/#traefik-ingress-controller>
 
