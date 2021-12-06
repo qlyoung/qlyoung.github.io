@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "PVC scuba rack for car"
+title:  "pvc scuba rack for car"
 ---
 
 Diving is a passion of mine. I've been diving more often lately and, as any
@@ -8,6 +8,21 @@ diver knows, transporting equipment is one of the logistical challenges of the
 sport. Having acquired a larger vehicle recently I decided to build a small
 equipment rack for it to support my usual configuration, namely two single
 AL80's.
+
+---
+
+*Update December 2021*
+
+Yeah...I no longer dive single 80s. I assumed that when I started diving
+doubles I would have to find something to do with the PVC rack, but as it turns
+out, if I just fold the seats of my car down the rack can be slid up further
+towards the cockpit. At that point doubles fit "in front" of the rack (on the
+hatch side), a storage bin can be put to the side of that, and the rack can
+hold another bin and two single bottles - which works perfectly for stages.
+
+Conclusion: this rack can grow with you :-)
+
+---
 
 ![Rack with cylinders](/images/rack_with_cylinders.jpg)
 
@@ -45,10 +60,6 @@ I chose to leave a large central space for my gear bag. Adding additional 27"
 sections using the T-joints adds capacity for up to 3 additional single AL80s
 for a total capacity of 5. In the future I may move sections around to support
 a twinset, which is why I didn't epoxy anything yet.
-
-Here it is fully loaded:
-
-![Rack with cylinders and gear bag](/images/rack_with_cylinders_and_gear_bag.jpg)
 
 Overall I think it turned out pretty good. Total cost of materials was about
 $100. I believe the demand for PVC to build ventilators has slightly increased
