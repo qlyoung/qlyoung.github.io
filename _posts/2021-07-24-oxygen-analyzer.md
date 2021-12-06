@@ -1,5 +1,5 @@
 ---
-title: DIY oxygen analyzer
+title: diy oxygen analyzer
 layout: post
 ---
 

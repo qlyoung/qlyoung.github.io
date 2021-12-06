@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "GNU Readline 8.1 - disable bracketed paste at runtime"
+title:  "gnu readline 8.1 - disable bracketed paste at runtime"
 ---
 
 Recently GNU Readline, the venerated line editing library used in everything
