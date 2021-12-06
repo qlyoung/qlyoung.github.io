@@ -1,6 +1,7 @@
 body {
   font-family: sans-serif;
   margin: 5ex 10ex;
+  background: #f0f0f0;
 }
 
 tt, pre {
