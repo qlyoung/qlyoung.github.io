@@ -20,7 +20,7 @@ pre {
 #accent {
   position: fixed;
   left: 0;
-  margin-top: -5ex;
+  top: 0;
   width: 3ex;
   height: 100vh;
   background: linear-gradient(27deg, #1c3a50 25%, #375a6a 25% 50%, #56628b 50% 75%, #649ba9 75%);
