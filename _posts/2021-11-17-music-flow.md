@@ -62,7 +62,7 @@ title:  "music management"
 
 [1]
 
-```fish
+```sh
 #!/usr/bin/fish
 set MUSICDIR "./music/"
 set SYNCDIR  "./music-sync"

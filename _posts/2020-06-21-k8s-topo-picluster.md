@@ -578,6 +578,8 @@ Create a random FRR topology:
 Total number of links generated: 12
 /k8s-topo/examples/builder # sed -i -e 's/qrtr/frr/g' ./random.yml
 /k8s-topo/examples/builder # cat random.yml
+```
+```yml
 conf_dir: /k8s-topo/examples/builder/config-random
 etcd_port: 32379
 links:
