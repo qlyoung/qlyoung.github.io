@@ -2,6 +2,7 @@ body {
   font-family: "Terminus", sans-serif;
   margin: 5ex 10ex;
   background: #f0f0f0;
+  font-size: 2vh;
 }
 
 code {
