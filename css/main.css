@@ -24,7 +24,7 @@ h2 {
 
 a {
     text-decoration: none;
-    color: #6977cf;
+    color: #375a6a;
 }
 
 img {
@@ -35,6 +35,18 @@ img {
 td {
     vertical-align: top;
 }
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #5b5f69;
+    color: white;
+  }
+
+  a {
+    color: #649ba9;
+  }
+}
+
 
 #accent {
   position: fixed;
