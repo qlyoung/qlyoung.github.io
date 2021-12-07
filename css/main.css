@@ -1,12 +1,11 @@
 body {
-  font-family: sans-serif;
+  font-family: 'Terminus', sans-serif;
   margin: 5ex 10ex;
   background: #f0f0f0;
 }
 
 code {
-  font-family: WebKitWorkaround, monospace;
-  font-family: Lucida Console,Lucida Sans Typewriter,monaco,Bitstream Vera Sans Mono,monospace;
+  font-family: 'Terminus', 'Lucida Console', monospace;
 }
 
 pre {
