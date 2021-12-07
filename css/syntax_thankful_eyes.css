@@ -1,5 +1,9 @@
-.highlight table td { padding: 5px; }
-.highlight table pre { margin: 0; }
+.highlight table td {
+  padding: 5px;
+}
+.highlight table pre {
+  margin: 0;
+}
 .highlight {
   color: #faf6e4;
   background-color: #122b3b;
@@ -12,7 +16,13 @@
   color: #a8e1fe;
   font-weight: bold;
 }
-.highlight .c, .highlight .ch, .highlight .cd, .highlight .cm, .highlight .cpf, .highlight .c1, .highlight .cs {
+.highlight .c,
+.highlight .ch,
+.highlight .cd,
+.highlight .cm,
+.highlight .cpf,
+.highlight .c1,
+.highlight .cs {
   color: #6c8b9f;
   font-style: italic;
 }
@@ -29,15 +39,19 @@
   font-weight: bold;
   font-style: italic;
 }
-.highlight .k, .highlight .kd, .highlight .kv {
+.highlight .k,
+.highlight .kd,
+.highlight .kv {
   color: #f6dd62;
   font-weight: bold;
 }
-.highlight .o, .highlight .ow {
+.highlight .o,
+.highlight .ow {
   color: #4df4ff;
   font-weight: bold;
 }
-.highlight .p, .highlight .pi {
+.highlight .p,
+.highlight .pi {
   color: #4df4ff;
 }
 .highlight .gd {
@@ -116,7 +130,14 @@
   color: #ffb000;
   font-weight: bold;
 }
-.highlight .m, .highlight .mb, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mx {
+.highlight .m,
+.highlight .mb,
+.highlight .mf,
+.highlight .mh,
+.highlight .mi,
+.highlight .il,
+.highlight .mo,
+.highlight .mx {
   color: #f696db;
   font-weight: bold;
 }
@@ -128,7 +149,15 @@
   color: #f696db;
   font-weight: bold;
 }
-.highlight .s, .highlight .sb, .highlight .dl, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .sr, .highlight .s1 {
+.highlight .s,
+.highlight .sb,
+.highlight .dl,
+.highlight .sd,
+.highlight .s2,
+.highlight .sh,
+.highlight .sx,
+.highlight .sr,
+.highlight .s1 {
   color: #fff0a6;
   font-weight: bold;
 }
@@ -156,12 +185,13 @@
   font-weight: bold;
 }
 .highlight .w {
-  color: #BBBBBB;
+  color: #bbbbbb;
 }
 .highlight .go {
-  color: #BBBBBB;
+  color: #bbbbbb;
 }
-.highlight .nf, .highlight .fm {
+.highlight .nf,
+.highlight .fm {
   color: #a8e1fe;
 }
 .highlight .py {
@@ -170,7 +200,11 @@
 .highlight .na {
   color: #a8e1fe;
 }
-.highlight .nv, .highlight .vc, .highlight .vg, .highlight .vi, .highlight .vm {
+.highlight .nv,
+.highlight .vc,
+.highlight .vg,
+.highlight .vi,
+.highlight .vm {
   color: #a8e1fe;
   font-weight: bold;
 }

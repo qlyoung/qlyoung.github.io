@@ -1,11 +1,11 @@
 body {
-  font-family: 'Terminus', sans-serif;
+  font-family: "Terminus", sans-serif;
   margin: 5ex 10ex;
   background: #f0f0f0;
 }
 
 code {
-  font-family: 'Terminus', 'Lucida Console', monospace;
+  font-family: "Terminus", "Lucida Console", monospace;
 }
 
 pre {
@@ -23,8 +23,8 @@ h2 {
 }
 
 a {
-    text-decoration: none;
-    color: #375a6a;
+  text-decoration: none;
+  color: #375a6a;
 }
 
 a:hover {
@@ -32,12 +32,12 @@ a:hover {
 }
 
 img {
-    max-width: 100%;
-    max-height: 50vh;
+  max-width: 100%;
+  max-height: 50vh;
 }
 
 td {
-    vertical-align: top;
+  vertical-align: top;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -51,14 +51,19 @@ td {
   }
 }
 
-
 #accent {
   position: fixed;
   left: 0;
   top: 0;
   width: 3ex;
   height: 100vh;
-  background: linear-gradient(27deg, #1c3a50 25%, #375a6a 25% 50%, #56628b 50% 75%, #649ba9 75%);
+  background: linear-gradient(
+    27deg,
+    #1c3a50 25%,
+    #375a6a 25% 50%,
+    #56628b 50% 75%,
+    #649ba9 75%
+  );
 }
 
 #maingrid {
@@ -84,4 +89,3 @@ td {
 .accent-block {
   height: 13rem;
 }
-
