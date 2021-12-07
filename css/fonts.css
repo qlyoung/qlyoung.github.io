@@ -2,5 +2,6 @@
   font-family: "Terminus";
   font-style: normal;
   font-weight: 400;
-  src: local("Terminus"), url("/fonts/terminus.woff") format("woff");
+  /* src: local("Terminus"), url("/fonts/terminus.woff") format("woff"); */
+  src: url("/fonts/terminus.woff") format("woff");
 }
