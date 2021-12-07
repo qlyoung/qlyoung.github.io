@@ -69,7 +69,7 @@ td {
 
 #maingrid {
   display: grid;
-  grid-template-columns: fit-content(65ex) auto;
+  grid-template-columns: fit-content(100vw) auto;
   grid-template-rows: auto auto;
 }
 
