@@ -1,6 +1,6 @@
 body {
   font-family: "Terminus", sans-serif;
-  margin: 5ex 10ex;
+  margin: 5vh 4vw;
   background: #f0f0f0;
   font-size: 2vh;
 }
@@ -56,7 +56,7 @@ td {
   position: fixed;
   left: 0;
   top: 0;
-  width: 3ex;
+  width: 2vw;
   height: 100vh;
   background: linear-gradient(
     27deg,
