@@ -214,6 +214,8 @@ the model I ended up using:
 including recall, precision, loss, and mean average precision on both training
 and validation sets](/images/birdcam/final-training-results.png)
 
+![PR curve](/images/birdcam/pr-curve.png)
+
 These metrics are all good and show that the model trained very nicely on the
 dataset.
 
