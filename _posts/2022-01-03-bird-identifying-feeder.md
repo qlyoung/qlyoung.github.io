@@ -59,7 +59,9 @@ exact species. A woodpecker that hangs around my place showed up, and I did
 know its species (Red-bellied woodpecker / *Melanerpes carolinus*) since I'd
 looked it up in the past. I recognized bluebirds as well. But I saw some birds
 I didn't recognize, and while I was looking up pictures trying to figure out
-what bird it was, it hit me - this is a textbook computer vision problem.
+what bird it was, it hit me - this is a textbook computer vision problem. I
+could build something that used realtime computer vision to identify birds as
+they appeared on camera.
 
 
 Investigation
@@ -67,11 +69,12 @@ Investigation
 
 I'd read about [YOLO](https://pjreddie.com/darknet/yolo/) some years before and
 began to reacquaint myself. It's come quite far and seems to be more or less
-the state of the art for realtime computer vision. I downloaded the latest
-version ([YOLOv5](https://github.com/ultralytics/yolov5) at time of writing)
-and ran the webcam demo. It ran well over 30fps with good accuracy on my RTX
-3080, correctly picking out myself as "person", my phone as "cell phone", and
-my light switch as "clock".
+the state of the art for realtime computer vision object detection and
+classification. I downloaded the latest version
+([YOLOv5](https://github.com/ultralytics/yolov5) at time of writing) and ran
+the webcam demo. It ran well over 30fps with good accuracy on my RTX3080,
+correctly picking out myself as "person", my phone as "cell phone", and my
+light switch as "clock".
 
 ![Screen capture of webcam feed after applying YOLOv5's out-of-box 'small'
 model to a scene of me holding up my cell phone. Picture is heavily
@@ -136,54 +139,48 @@ require that the dataset not be redistributed, so I cannot provide the
 converted dataset, but I can provide [the
 code](https://github.com/qlyoung/birdcam) I used to process it.
 
----
-
-*Note:
-Machine learning models are typically trained on some subset of the total
-available data, with the rest being used to evaluate the model's performance on
-data it has not seen before. One of the metadata files provided with the
-dataset defines a suggested train/test split, classifying each image by its
-suggested usage. I tried training with the suggested split, and results were
-significantly worse than using a standard 80/10/10 (train/test/validate)
-split.*
-
----
 
 Training
 --------
 
 With the dataset correctly formatted, the next step was to train YOLOv5 on it.
 This can be somewhat difficult depending on one's patience and access to
-hardware resources. I have an RTX 3080 at my disposal, but even that is
-somewhat limited by its 10gb memory; training certain kinds of machine learning
-models is memory intensive. In the case of YOLO, which uses a convolutional
-neural network (CNN), less GPU memory means fewer images can be processed in a
-single gradient descent step (the 'batch size'), significantly increasing the
-time needed to train. It's worth noting that training with a smaller batch size
-[shouldn't affect](https://github.com/ultralytics/yolov5/issues/2377) the final
-outcome too much, so patience can compensate for lack of memory if desired.
+hardware resources. Training machine learning models involves lots of
+operations that are highly amenable to acceleration by GPUs, and to train them
+in a reasonable timeframe, a GPU or tensor processor is required. I have an
+RTX3080 at my disposal, so it was easy to get started on my personal desktop.
 
 YOLOv5 offers multiple network sizes, from `n` to `x` (`n` for `nano`, `x` for
 `x`). `n`, `s` and `m` sizes are recommended for mobile or workstation
 deployments, while `l` and `x` variants are geared towards cloud / datacenter
 deployments (i.e. expensive datacenter GPUs / tensor processors). The larger
-variants take longer to train and longer to evaluate. Since the model needs to
-be evaluated on each frame in a video feed, the model size ultimately dictates
-the achievable FPS. Holding all else constant, choice of model size is a
-tradeoff between accuracy and framerate.
+variants take longer to train and longer to evaluate. Since the model needed to
+be evaluated on each frame in a video feed, holding all else constant, for this
+project the choice of model size would ultimately dictate the achievable
+framerate.
 
 ![Graph showing evaluation time versus average precision against the COCO
 dataset](/images/birdcam/yolo-model-comparison-graph.png)
 
 Since the webcam demo with the `s` model ran at a good framerate on my GPU I
-chose that one to start. Training YOLOv5s on my RTX 3080 took about 23 hours
-to train 100 epochs with a batch size of 8. Each epoch represents one complete
-processing of the training dataset. General advice for YOLO is to use about 300
-epochs. Since training typically involves a trial-and-error process of tweaking
-parameters and retraining, and I wanted to try using the `m` model, clearly the
-3080 was not going to be sufficient to get this project done in the desired
-timeframe. This was a holiday project for me, I wanted it done before the
-end of the holidays.
+chose that one to start.
+
+Training certain kinds of machine learning models is memory intensive. In the
+case of YOLO, which uses a convolutional neural network (CNN), less GPU memory
+means fewer images can be processed in a single gradient descent step (the
+'batch size'), significantly increasing the time needed to train. It's worth
+noting that training with a smaller batch size [shouldn't
+affect](https://github.com/ultralytics/yolov5/issues/2377) the final outcome
+too much, so patience can compensate for lack of GPU memory if necessary. In my
+case the largest batch size I could get on my GPU was 8.
+
+Training YOLOv5s on my RTX3080 took about 23 hours to train 100 epochs with a
+batch size of 8. Each epoch represents one complete processing of the training
+dataset. General advice for YOLO is to use about 300 epochs. Since training
+typically involves a trial-and-error process of tweaking parameters and
+retraining, and I wanted to try using the `m` model, clearly the 3080 was not
+going to be sufficient to get this project done in the desired timeframe. This
+was a holiday project for me, I wanted it done before the end of the holidays.
 
 I knew people use cloud compute services to train these things, so it was time
 to find some cloud resources with ML acceleration hardware. To that end I
@@ -202,10 +199,23 @@ than I had imagined.
 
 The RTX6000 allowed me to use a batch size of 32, which brought training within
 a reasonable timeframe of about 2 days for the `m` model at 300 epochs. Good
-thing, because at $1.50 an hour, those VMs aren't cheap. A few days of of
-training was about as much as I was willing to spend on this project, and the
-graphs indicated that the classification loss was on the order of 3% - more
-than sufficient for a fun project.
+thing, because at $1.50 an hour, those VMs aren't cheap. A few days of training
+was about as much as I was willing to spend on this project, and the graphs
+indicated that the classification loss was on the order of 3% - more than
+sufficient for a fun project.
+
+---
+
+*Note:
+Machine learning models are typically trained on some subset of the total
+available data, with the rest being used to evaluate the model's performance on
+data it has not seen before. One of the metadata files provided with the
+dataset defines a suggested train/test split, classifying each image by its
+suggested usage. I tried training with the suggested split, and results were
+significantly worse than using a standard 80/10/10 (train/test/validate)
+split.*
+
+---
 
 For the data oriented, here is the summary information for the training run of
 the model I ended up using:
