@@ -46,6 +46,10 @@ td {
   vertical-align: top;
 }
 
+ul {
+  list-style-type: "* ";
+}
+
 @media (prefers-color-scheme: dark) {
   body {
     background: #5b5f69;
