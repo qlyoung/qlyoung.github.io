@@ -1,4 +1,7 @@
 name: "Quentin Young"
+description: "Personal site of Quentin Young"
+url: "https://qlyoung.net/"
+author: qlyoung
 markdown: kramdown
 kramdown:
   input: GFM
@@ -8,3 +11,5 @@ kramdown:
   parse_block_html: true
 permalink: :title
 exclude: [README.md, LICENSE, Makefile, rebuild.fish]
+plugins:
+  - jekyll-feed

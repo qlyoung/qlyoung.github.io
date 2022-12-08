@@ -1,4 +1,5 @@
 ---
+author: qlyoung
 layout: post
 title:  "gnu readline 8.1 - disable bracketed paste at runtime"
 ---
