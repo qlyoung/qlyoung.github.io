@@ -1,10 +1,8 @@
 body {
   font-family: "Terminus", sans-serif;
-  margin: 5vh 4rem;
-  background-image: url("https://photos.qlyoung.net/_data/i/upload/2021/10/18/20211018052006-cf50139e-me.jpg");
-  background-size: cover;
-  background-attachment: fixed;
-  font-size: 1rem;
+  margin: 5vh 4vw;
+  background: #f0f0f0;
+  font-size: 2vh;
 }
 
 code {
@@ -54,6 +52,7 @@ ul {
 
 @media (prefers-color-scheme: dark) {
   body {
+    background: #5b5f69;
     color: white;
   }
 
@@ -66,14 +65,14 @@ ul {
   position: fixed;
   left: 0;
   top: 0;
-  width: 1rem;
+  width: 2vw;
   height: 100vh;
   background: linear-gradient(
     27deg,
-    rgba(28, 58, 80, 1) 25%,
-    rgba(55, 90, 106, 1) 25% 50%,
-    rgba(86, 98, 139, 1) 50% 75%,
-    rgba(100, 155, 169, 1) 75%
+    #1c3a50 25%,
+    #375a6a 25% 50%,
+    #56628b 50% 75%,
+    #649ba9 75%
   );
 }
 
@@ -99,11 +98,4 @@ ul {
 
 .accent-block {
   height: 13rem;
-}
-
-#content {
-  border-radius: 25px;
-  padding: 1rem;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(12px);
 }
